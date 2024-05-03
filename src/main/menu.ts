@@ -1,6 +1,7 @@
 import {
     app,
     Menu,
+    dialog,
     shell,
     BrowserWindow,
     MenuItemConstructorOptions,
@@ -200,6 +201,18 @@ import {
             {
               label: "&開く",
               accelerator: "Ctrl+O",
+              click: () => {
+                const mainWindow = BrowserWindow.getFocusedWindow();
+                if (!mainWindow) return;
+                dialog.showOpenDialog(mainWindow, { properties: ['openFile'] }).then(result => {
+                  if (!result.canceled && result.filePaths.length > 0) {
+                    console.log('open file:', result.filePaths[0]);
+                    mainWindow.webContents.send('open_file', result.filePaths[0]);
+                  }
+                }).catch(err => {
+                  console.error('Failed to open dialog:', err);
+                });
+              }                         
             },
             {
               label: "&閉じる",

@@ -30,6 +30,7 @@ const createWindow = async () => {
       // webpack が出力したプリロードスクリプトを読み込み
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       devTools: true,
+      webSecurity: false,
     },
   });
 
