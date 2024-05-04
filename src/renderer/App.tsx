@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Router from "renderer/Router";
 
 declare global {
@@ -10,18 +10,21 @@ declare global {
 }
 
 const App = () => {
-  const [videoSrc, setVideoSrc] = useState<string>('');
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     window.electronAPI.openFile((filePath: string) => {
       console.log(filePath);
+      if (videoRef.current) {
+        videoRef.current.src = filePath;
+      }
     });
   }, []);
 
   return (
     <div>
       <p>Video Player</p>
-      <video src={videoSrc} controls autoPlay />
+      <video ref={videoRef} controls autoPlay />
       <Router />
     </div>
   );

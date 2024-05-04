@@ -9,7 +9,11 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "create": "electron-builder",
+    "win": "electron-builder --win --x64",
+    "mac": "electron-builder --mac --x64",
+    "linux": "electron-builder --linux --x64"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
@@ -28,12 +32,13 @@
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.0.0",
     "electron": "30.0.2",
+    "electron-builder": "^24.13.3",
     "eslint": "^8.0.1",
     "eslint-plugin-import": "^2.25.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
-    "ts-loader": "^9.2.2",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.0.0",
     "typescript": "~4.5.4"
   },
@@ -44,9 +49,42 @@
   },
   "license": "MIT",
   "dependencies": {
+    "custom-electron-titlebar": "^4.2.8",
     "electron-squirrel-startup": "^1.0.0",
+    "path-browserify": "^1.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.0"
+  },
+  "build": {
+    "extends": null,
+    "files": [
+      "build/**/*",
+      "*.js"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
