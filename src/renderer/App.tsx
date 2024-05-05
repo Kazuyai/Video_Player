@@ -1,30 +1,67 @@
+import { ipcRenderer } from "electron";
 import { useEffect, useRef, useState } from "react";
 import Router from "renderer/Router";
 
 declare global {
   interface Window {
     electronAPI: {
-      openFile: (callback: (filePath: string) => void) => void;
+      openFile: (url : string) => void;
+      sendFile: (callback: (url: string) => void) => void;
     }
   }
 }
 
 const App = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-
   useEffect(() => {
-    window.electronAPI.openFile((filePath: string) => {
-      console.log(filePath);
-      if (videoRef.current) {
-        videoRef.current.src = filePath;
-      }
-    });
-  }, []);
+    if (window.electronAPI && typeof window.electronAPI.sendFile === 'function') {
+        window.electronAPI.sendFile((url: string) => {
+          if (!videoRef.current) return; 
+          videoRef.current.src = url;
+        });
+    } else {
+        console.error('window.electronAPI.sendFile is not a function');
+    }
+}, []);
+  // window.electronAPI.onReply((e : any, arg : any) => {
+  //   console.log(arg);
+  //   if(!videoRef.current) return;
+  //   videoRef.current.src = arg;
+  // });
+
+  // const setVideoSource = (src : string) => {
+  //   if (!videoRef.current) return;
+  //   videoRef.current.src = src;
+  // }
+
+  // // グローバルスコープに関数を公開
+  // window.setVideoSource = setVideoSource;
+
+  // ipcRenderer.on("send-url", (_event, url : string) => {
+  //   if (videoRef.current) {
+  //     videoRef.current.src = url;
+  //   }
+  // });
+
+  // useEffect(() => {
+  //   window.electronAPI.openFile((filePath: string) => {
+  //     console.log(filePath);
+  //     if (videoRef.current) {
+  //       videoRef.current.src = filePath;
+  //     }
+  //   });
+  // }, []);
+  
 
   return (
     <div>
       <p>Video Player</p>
       <video ref={videoRef} controls autoPlay />
+      <button 
+        onClick={() => {
+          window.electronAPI.openFile("aaa");
+        }}
+      >---------------</button>
       <Router />
     </div>
   );

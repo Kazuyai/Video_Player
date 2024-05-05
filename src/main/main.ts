@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 // import fsFunctionListener from "./functions/fsFunction";
 // import shellFunctionListener from "./functions/shellFunction";
 import testFunctionListener from "./functions/testFunction";
@@ -22,6 +22,10 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
+const openFile = (_event : any, url : string) => {
+  mainWindow?.webContents.send('send-file', url);
+}
+
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
     width: 1024,
@@ -34,6 +38,7 @@ const createWindow = async () => {
     },
   });
 
+  console.log("preload: " + MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY);
   // レンダラープロセスをロード
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
@@ -57,6 +62,7 @@ const createWindow = async () => {
 };
 
 app.whenReady().then(() => {
+  ipcMain.on('open-file', openFile);
   // アプリの起動イベント発火で BrowserWindow インスタンスを作成
   createWindow();
 });

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>AAAA</p>
+    <input type="file" name="" id="file-uploader">
+    <button onclick="openFile()">開く</button>
+    <video id="video" controls></video>
+    <script>
+        const openFile = () => {
+            const fileUploader = document.getElementById("file-uploader");
+            if(!fileUploader.files) return;
+            const file = fileUploader.files[0];
+            const fileURL = URL.createObjectURL(file);
+            // const video = document.getElementById("video");
+            // video.src = URL.createObjectURL(file);
+            window.electronAPI.openFile(fileURL);
+        }
+    </script>
+</body>
+</html>

@@ -6,7 +6,10 @@ import {
     BrowserWindow,
     MenuItemConstructorOptions,
     ipcMain,
+    ipcRenderer,
   } from "electron";
+import { useEffect } from "react";
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
   
   interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
     selector?: string;
@@ -203,16 +206,38 @@ import {
               
               label: "&開く",
               accelerator: "Ctrl+O",
-              click: async () => {
-                if (!this.mainWindow) return;
-                const result = await dialog.showOpenDialog(this.mainWindow, {
-                  properties: ['openFile'],
-                  filters: [{ name: 'Videos', extensions: ['mp4', 'avi', 'mov', 'mkv'] }]
+              click:() => {
+              //   if (!this.mainWindow) return;
+              //   const result = await dialog.showOpenDialog(this.mainWindow, {
+              //     properties: ['openFile'],
+              //     filters: [{ name: 'Videos', extensions: ['mp4', 'avi', 'mov', 'mkv'] }]
+              //   });
+              //   if (result.canceled || result.filePaths.length === 0) return;
+              //   const filePath = result.filePaths[0];
+              //   this.mainWindow.webContents.send('open_file', filePath);
+              // }        
+                const path = require('path');
+                let childWindow = new BrowserWindow({
+                  width: 400,
+                  height: 300,
+                  webPreferences: {
+                  nodeIntegration: false, // nodeIntegrationを無効化
+                  contextIsolation: true, // contextIsolationを有効化
+                  webSecurity: false,
+                  devTools: true,
+                  preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
+                    // preload: path.resolve(__dirname, './renderer/main_window/preload.js'),
+                  }
                 });
-                if (result.canceled || result.filePaths.length === 0) return;
-                const filePath = result.filePaths[0];
-                this.mainWindow.webContents.send('open_file', filePath);
-              }                 
+
+                childWindow.webContents.openDevTools();
+              
+                // test.html のパスを指定
+                const childPath = "src/renderer/test.html";
+                console.log(childPath);
+                childWindow.loadFile(childPath);  
+                childWindow.setMenu(null);  
+              }   
             },
             {
               label: "&閉じる",
