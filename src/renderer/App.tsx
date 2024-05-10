@@ -1,6 +1,8 @@
 import { ipcRenderer } from "electron";
 import { useEffect, useRef, useState } from "react";
 import Router from "renderer/Router";
+import { Video, Settings, Timeline } from "renderer/components";
+import "./App.css";
 
 declare global {
   interface Window {
@@ -12,7 +14,10 @@ declare global {
 }
 
 const App = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  const [videoSrc, setVideoSrc] = useState<string>("");
+  
+  /*const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     if (window.electronAPI && typeof window.electronAPI.sendFile === 'function') {
         window.electronAPI.sendFile((url: string) => {
@@ -22,7 +27,7 @@ const App = () => {
     } else {
         console.error('window.electronAPI.sendFile is not a function');
     }
-}, []);
+  }, []);*/
   // window.electronAPI.onReply((e : any, arg : any) => {
   //   console.log(arg);
   //   if(!videoRef.current) return;
@@ -55,14 +60,22 @@ const App = () => {
 
   return (
     <div>
-      <p>Video Player</p>
-      <video ref={videoRef} controls autoPlay />
+      {/* <video ref={videoRef} controls autoPlay />
       <button 
         onClick={() => {
           window.electronAPI.openFile("aaa");
         }}
-      >---------------</button>
-      <Router />
+      >---------------</button> */}
+      {/* <Router /> */}
+      <div className="up">
+        <Video
+          videoSrc={videoSrc}
+        />
+        <Settings 
+          setVideoSrc={setVideoSrc}
+        />
+      </div>
+      <Timeline />
     </div>
   );
 };

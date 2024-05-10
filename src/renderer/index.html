@@ -5,8 +5,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<!-- <meta
 			http-equiv="Content-Security-Policy"
-			content="default-src 'self'; media-src blob:;"
+			content="media-src blob:;"
 		/> -->
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: blob:;">
+
 		<title>Video Player</title>
 	</head>
 	<body>
